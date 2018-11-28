@@ -8,10 +8,34 @@
   <packaging>jar</packaging>
 
   <name>Hyconj-Util</name>
-  <url>http://maven.apache.org</url>
+  <url>https://github.com/Team-Hycon/hyconj-util</url>
+  
+  <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>https://opensource.org/licenses/Apache-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+  
+  <developers>
+     <developer>
+         <name>Joowon Yun</name>
+         <email>yjw@glosfer.com</email>
+     </developer>
+   </developers>
 
+  <distributionManagement>
+      <repository>
+          <id>hyconj-util</id>
+          <url>https://api.bintray.com/maven/joowonyun/hyconj-util/Hyconj-Util/;publish=1</url>
+      </repository>
+  </distributionManagement>
   <properties>
+  	<java.version>1.8</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <bintray.repo>Team-Hycon/hyconj-util</bintray.repo>
+    <bintray.package>hyconj-util</bintray.package>
   </properties>
 
   <dependencies>
@@ -54,6 +78,21 @@
   			<artifactId>maven-shade-plugin</artifactId>
   			<version>2.3</version>
   		</plugin>
+  		<!-- GPG sign -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.5</version>
+            <executions>
+                <execution>
+                    <id>sign-artifacts</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>sign</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
   	</plugins>
   </build>
 </project>
