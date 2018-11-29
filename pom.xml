@@ -4,7 +4,7 @@
 
   <groupId>com.hycon</groupId>
   <artifactId>Hyconj-Util</artifactId>
-  <version>0.0.1</version>
+  <version>0.0.2</version>
   <packaging>jar</packaging>
 
   <name>Hyconj-Util</name>
@@ -61,9 +61,9 @@
 	    <version>1.9</version>
 	</dependency>
 	<dependency>
-	    <groupId>com.google</groupId>
-	    <artifactId>bitcoinj</artifactId>
-	    <version>0.11.1</version>
+	    <groupId>org.bitcoinj</groupId>
+	    <artifactId>bitcoinj-core</artifactId>
+	    <version>0.14.7</version>
 	</dependency>
 	<dependency>
 	  <groupId>org.web3j</groupId>

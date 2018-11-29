@@ -1,24 +1,36 @@
 package com.hycon.HyconUtil;
 
+import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
+import java.security.Security;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.bitcoinj.core.AddressFormatException;
+import org.bitcoinj.core.Base58;
+import org.bitcoinj.core.ECKey;
+import org.bitcoinj.crypto.ChildNumber;
+import org.bitcoinj.crypto.DeterministicKey;
+import org.bitcoinj.crypto.HDKeyDerivation;
 import org.web3j.crypto.ECKeyPair;
 import org.web3j.crypto.Sign;
 import org.web3j.crypto.Sign.SignatureData;
 
-import com.google.bitcoin.core.AddressFormatException;
-import com.google.bitcoin.core.Base58;
 import com.google.protobuf.ByteString;
+import com.hycon.HyconUtil.generator.MnemonicGenerator;
+import com.hycon.HyconUtil.mnemonic.ChineseSimplified;
+import com.hycon.HyconUtil.mnemonic.ChineseTraditional;
+import com.hycon.HyconUtil.mnemonic.English;
+import com.hycon.HyconUtil.mnemonic.French;
+import com.hycon.HyconUtil.mnemonic.Italian;
+import com.hycon.HyconUtil.mnemonic.Japanese;
+import com.hycon.HyconUtil.mnemonic.Korean;
+import com.hycon.HyconUtil.mnemonic.Spanish;
 import com.hycon.proto.TxOuterClass;
 import com.hycon.proto.TxOuterClass.Tx;
-import com.rfksystems.blake2b.*;
+import com.rfksystems.blake2b.Blake2b;
 import com.rfksystems.blake2b.security.Blake2bProvider;
-
-import java.security.Security;
 
 public class Utils {
 	
@@ -185,4 +197,59 @@ public class Utils {
 		
 		return result;
 	}
+	
+	public String getMnemonic(String language) throws IOException {
+		
+		String[] wordList = getBip39WordList(language);
+
+        return MnemonicGenerator.generateMnemonic(wordList);
+	}
+	
+	public String[] createWallet(String mnemonic, String passphrase) throws NoSuchAlgorithmException {
+
+		byte[] seed = MnemonicGenerator.generateSeed(mnemonic, passphrase);
+		DeterministicKey masterKey = HDKeyDerivation.createMasterPrivateKey(seed);
+		ECKey finalKeyPair = fromBIP44HDPath(masterKey, 0);
+		
+		String[] result = new String[2]; // 0 : address, 1 : private key
+		
+		result[0] = addressToString(publicKeyToAddress(finalKeyPair.getPubKey()));
+		result[1] = encodeHexByteArrayToString(finalKeyPair.getPrivKeyBytes());
+		
+		return result;
+		
+	}
+	
+	private String[] getBip39WordList(String language) {
+		if(language.equals("englise")) {
+			return English.words;
+		} else if(language.equals("korean")) {
+			return Korean.words;
+		} else if(language.equals("chinese_simplified")) {
+			return ChineseSimplified.words;
+		} else if(language.equals("chinese_traditional")) {
+			return ChineseTraditional.words;
+		} else if(language.equals("chinese")) {
+			throw new Error("Did you mean chinese_simplified or chinese_traditional?");
+		} else if(language.equals("japanese")) {
+			return Japanese.words;
+		} else if(language.equals("french")) {
+			return French.words;
+		} else if(language.equals("spanish")) {
+			return Spanish.words;
+		} else if(language.equals("italian")) {
+			return Italian.words;
+		} else {
+			return English.words;
+		}
+	}
+	
+	private ECKey fromBIP44HDPath (DeterministicKey master, int accountIndex) {
+        DeterministicKey purposeKey = HDKeyDerivation.deriveChildKey(master, 44 | ChildNumber.HARDENED_BIT) ;
+        DeterministicKey rootKey = HDKeyDerivation.deriveChildKey(purposeKey, 1397 | ChildNumber.HARDENED_BIT);
+        DeterministicKey accountKey = HDKeyDerivation.deriveChildKey(rootKey, accountIndex | ChildNumber.HARDENED_BIT) ;
+        DeterministicKey changeKey = HDKeyDerivation.deriveChildKey(accountKey, 0) ;
+        DeterministicKey addressKey = HDKeyDerivation.deriveChildKey(changeKey, 0) ;
+        return ECKey.fromPrivate(addressKey.getPrivKeyBytes());
+    }
 }

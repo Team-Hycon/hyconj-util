@@ -2,13 +2,12 @@ package com.hycon.HyconUtil;
 
 import static org.junit.Assert.assertEquals;
 
-import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
+
+import javax.security.auth.login.AccountException;
 
 import org.apache.commons.codec.DecoderException;
 import org.junit.Test;
-
-import com.google.bitcoin.core.AddressFormatException;
 
 
 /**
@@ -43,7 +42,7 @@ public class AppTest{
 	}
 	
 	@Test
-	public void base58DecodeTest() throws DecoderException, AddressFormatException {
+	public void base58DecodeTest() throws DecoderException, AccountException {
 		byte[] result = utils.base58Decode("wTsQGpbicAZsXcmSHN8XmcNR9wX");
 		
 		assertEquals("4366e2a531a891233fd59cfa5f062a0f1018af6a", utils.encodeHexByteArrayToString(result));
@@ -106,5 +105,21 @@ public class AppTest{
 			assertEquals("fd67de0827ccf8bc957eeb185ba0ea78aa1cd5cad74aea40244361ee7df68e36025aebc4ae6b18628135ea3ef5a70ea3681a7082c44af0899f0f59b50f2707b9", strArr[0]);
 			assertEquals("1", strArr[1]);
 		}
+	}
+	
+	@Test
+	public void createWalletTest() throws NoSuchAlgorithmException {
+		String[] result = utils.createWallet("ring crime symptom enough erupt lady behave ramp apart settle citizen junk", "");
+		
+		assertEquals("HwTsQGpbicAZsXcmSHN8XmcNR9wXHtw7", result[0]);
+		assertEquals("f35776c86f811d9ab1c66cadc0f503f519bf21898e589c2f26d646e472bfacb2", result[1]);
+	}
+	
+	@Test
+	public void createWalletWithPassPhraseTest() throws NoSuchAlgorithmException {
+		String[] result = utils.createWallet("way prefer push tooth bench hover orchard brother crumble nothing wink retire", "TREZOR");
+		
+		assertEquals("H3fFn71jR6G33sAVMASDtLFhrq38h8FQ1", result[0]);
+		assertEquals("4c28ef543da7ee616d91ba786ce73ef02cf29818f3cdf5a4639771921a2cf843", result[1]);
 	}
 }
