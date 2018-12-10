@@ -10,7 +10,7 @@ Common java functions for Hycon.
 <dependency>
   <groupId>com.hycon</groupId>
   <artifactId>Hyconj-Util</artifactId>
-  <version>0.0.2</version>
+  <version>0.0.3</version>
   <type>pom</type>
 </dependency>
 ```

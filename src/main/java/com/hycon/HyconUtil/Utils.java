@@ -153,7 +153,7 @@ public class Utils {
 		return String.valueOf(integer) + "." + decimals;
 	}
 	
-	public String[] signTx(String fromAddress, String toAddress, String amount, String minerFee, int nonce, String privatekey) throws Exception {
+	public String[] signTx(String fromAddress, String toAddress, String amount, String minerFee, int nonce, String privatekey, String networkId) throws Exception {
 		byte[] from = addressToByteArray(fromAddress);
 		byte[] to = addressToByteArray(toAddress);
 		
@@ -165,35 +165,19 @@ public class Utils {
 		txBuilder.setNonce(nonce);
 		
 		Tx.Builder newTxBuilder = Tx.newBuilder(txBuilder.build());
-		newTxBuilder.setNetworkid("hycon");
+		newTxBuilder.setNetworkid(networkId);
 		TxOuterClass.Tx newTx = newTxBuilder.build();
 		byte[] newTxData = newTx.toByteArray();
 		byte[] newTxHash = blake2bHash(newTxData);
 		ECKeyPair ecKeyPair = ECKeyPair.create(decodeHexStringToByteArray(privatekey));
-		SignatureData newSignatureData = Sign.signMessage(newTxHash, ecKeyPair, false);
-		String newSignature = encodeHexByteArrayToString(newSignatureData.getR()) + encodeHexByteArrayToString(newSignatureData.getS());
-		String newRecovery = String.valueOf(newSignatureData.getV() - 27);
+		SignatureData signatureData = Sign.signMessage(newTxHash, ecKeyPair, false);
+		String signature = encodeHexByteArrayToString(signatureData.getR()) + encodeHexByteArrayToString(signatureData.getS());
+		String recovery = String.valueOf(signatureData.getV() - 27);
 		
-		String[] result = new String[4];
-		int index = 0;
-		
-		if(System.currentTimeMillis() <= Long.valueOf("1544108400000")) {
-			TxOuterClass.Tx tx = txBuilder.build();
-			byte[] txData = tx.toByteArray();
-			byte[] txhash = blake2bHash(txData);
-			SignatureData signatureData = Sign.signMessage(txhash, ecKeyPair, false);
-			
-			String signature = encodeHexByteArrayToString(signatureData.getR()) + encodeHexByteArrayToString(signatureData.getS());
-			String recovery = String.valueOf(signatureData.getV() - 27);
-			
-			result[index++] = signature;
-			result[index++] = recovery;
-			result[index++] = newSignature;
-			result[index++] = newRecovery;
-		} else {
-			result[index++] = newSignature;
-			result[index++] = newRecovery;
-		}
+		String[] result = new String[2];
+
+		result[0] = signature;
+		result[1] = recovery;
 		
 		return result;
 	}
