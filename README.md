@@ -8,7 +8,7 @@ Common java functions for Hycon.
 
 ```bash
 <dependency>
-  <groupId>com.hycon</groupId>
+  <groupId>io.github.team-hycon</groupId>
   <artifactId>Hyconj-Util</artifactId>
   <version>0.0.3</version>
   <type>pom</type>
