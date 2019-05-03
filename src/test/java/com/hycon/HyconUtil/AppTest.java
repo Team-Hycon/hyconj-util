@@ -115,4 +115,27 @@ public class AppTest{
 		assertEquals("H3fFn71jR6G33sAVMASDtLFhrq38h8FQ1", result[0]);
 		assertEquals("4c28ef543da7ee616d91ba786ce73ef02cf29818f3cdf5a4639771921a2cf843", result[1]);
 	}
+	
+	@Test
+	public void createHDWalletTest() throws Exception {
+		String result = utils.createHDWallet("length segment syrup visa lava beach rain crush false reveal alone olympic", "");
+		
+		assertEquals("xprv9s21ZrQH143K2gffZBzfnUUUjR5MfiQKNj1xXfwuHtxu7yzAPTMC6Gr6D5Krx2nPWVHoe6xDFTV6h6A2oZqXd5DbQowofFLS2fuk2RaU4tE", result);
+	}
+	
+	@Test
+	public void createHDWalletWithPassPhraseTest() throws Exception {
+		String result = utils.createHDWallet("length segment syrup visa lava beach rain crush false reveal alone olympic", "TREZOR");
+		
+		assertEquals("xprv9s21ZrQH143K4bekgsnc9DtUYZzjjjT9MrcZfQHvKKq7CkifHoAXC58LBFGjjpX6bSyp31mwTtbEMW6NAjV19QaQj6hVpz5Nphr3XiN5fbT", result);
+	}
+	
+	@Test
+	public void getWalletFromExtKeyTest() throws DecoderException, NoSuchAlgorithmException {
+		String[] result = utils.getWalletFromExtKey("xprv9s21ZrQH143K4bekgsnc9DtUYZzjjjT9MrcZfQHvKKq7CkifHoAXC58LBFGjjpX6bSyp31mwTtbEMW6NAjV19QaQj6hVpz5Nphr3XiN5fbT", 1);
+		
+		assertEquals("H3cpQEhLs3pmwyTnv7PBHmux8CrRBA72d", result[0]);
+		assertEquals("1a6374f984be521f09a96c4842ec3e66a37e0239b95bd0e13d9632fa8f7dbc4a", result[1]);
+	}
+	
 }
