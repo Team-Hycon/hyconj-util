@@ -10,6 +10,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.bitcoinj.core.AddressFormatException;
 import org.bitcoinj.core.Base58;
 import org.bitcoinj.core.ECKey;
+import org.bitcoinj.core.NetworkParameters;
 import org.bitcoinj.crypto.ChildNumber;
 import org.bitcoinj.crypto.DeterministicKey;
 import org.bitcoinj.crypto.HDKeyDerivation;
@@ -204,6 +205,31 @@ public class Utils {
 		
 	}
 	
+	public String createHDWallet(String mnemonic, String passphrase) throws Exception {
+		byte[] seed = MnemonicGenerator.generateSeed(mnemonic, passphrase);
+		DeterministicKey masterKey = HDKeyDerivation.createMasterPrivateKey(seed);
+		
+		if(!masterKey.hasPrivKey()) {
+			throw new Exception("masterKey does not have Extended PrivateKey");
+		}
+		
+		return masterKey.serializePrivB58(NetworkParameters.fromID(NetworkParameters.ID_MAINNET));
+	}
+	
+	public String[] getWalletFromExtKey(String privateExtendedKey, int index) throws DecoderException, NoSuchAlgorithmException {
+		DeterministicKey masterKey = DeterministicKey.deserializeB58(privateExtendedKey, NetworkParameters.fromID(NetworkParameters.ID_MAINNET));
+		
+		ECKey finalKeyPair = fromBIP44HDPath(masterKey, index);
+		
+		String[] result = new String[2]; // 0 : address, 1 : private key
+		
+		result[0] = addressToString(publicKeyToAddress(finalKeyPair.getPubKey()));
+		result[1] = encodeHexByteArrayToString(finalKeyPair.getPrivKeyBytes());
+		
+		return result;
+		
+	}
+	
 	private String[] getBip39WordList(String language) {
 		if(language.equals("englise")) {
 			return English.words;
@@ -231,9 +257,10 @@ public class Utils {
 	private ECKey fromBIP44HDPath (DeterministicKey master, int accountIndex) {
         DeterministicKey purposeKey = HDKeyDerivation.deriveChildKey(master, 44 | ChildNumber.HARDENED_BIT) ;
         DeterministicKey rootKey = HDKeyDerivation.deriveChildKey(purposeKey, 1397 | ChildNumber.HARDENED_BIT);
-        DeterministicKey accountKey = HDKeyDerivation.deriveChildKey(rootKey, accountIndex | ChildNumber.HARDENED_BIT) ;
+        DeterministicKey accountKey = HDKeyDerivation.deriveChildKey(rootKey, 0 | ChildNumber.HARDENED_BIT) ;
         DeterministicKey changeKey = HDKeyDerivation.deriveChildKey(accountKey, 0) ;
-        DeterministicKey addressKey = HDKeyDerivation.deriveChildKey(changeKey, 0) ;
+        DeterministicKey addressKey = HDKeyDerivation.deriveChildKey(changeKey, accountIndex) ;
+		
         return ECKey.fromPrivate(addressKey.getPrivKeyBytes());
     }
 }
