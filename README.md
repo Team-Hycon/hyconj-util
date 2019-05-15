@@ -1,5 +1,5 @@
 # Hycon java utilities
-[![Build Status](https://travis-ci.org/Team-Hycon/hyconj-util.svg?branch=master)](https://travis-ci.org/Team-Hycon/hyconj-util)
+[![Build Status](https://travis-ci.com/Team-Hycon/hyconj-util.svg?branch=master)](https://travis-ci.com/Team-Hycon/hyconj-util)
 
 Common java functions for Hycon.
 
