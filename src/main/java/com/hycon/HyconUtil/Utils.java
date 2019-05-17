@@ -231,7 +231,7 @@ public class Utils {
 	}
 	
 	private String[] getBip39WordList(String language) {
-		if(language.equals("englise")) {
+		if(language.equals("english")) {
 			return English.words;
 		} else if(language.equals("korean")) {
 			return Korean.words;
