@@ -4,7 +4,7 @@
 
   <groupId>io.github.team-hycon</groupId>
   <artifactId>Hyconj-Util</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <packaging>jar</packaging>
 
   <name>Hyconj-Util</name>
@@ -79,10 +79,15 @@
   <build>
   	<plugins>
   		<plugin>
-  			<groupId>org.apache.maven.plugins</groupId>
-  			<artifactId>maven-shade-plugin</artifactId>
-  			<version>2.3</version>
-  		</plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>2.2.1</version>
+        <configuration>
+          <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+          </descriptorRefs>
+        </configuration>
+      </plugin>
   		<!-- GPG sign -->
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
