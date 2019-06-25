@@ -11,7 +11,7 @@ Common java functions for Hycon.
 <dependency>
   <groupId>io.github.team-hycon</groupId>
   <artifactId>Hyconj-Util</artifactId>
-  <version>0.0.4</version>
+  <version>0.0.5</version>
   <type>pom</type>
 </dependency>
 ```

@@ -1131,12 +1131,12 @@ public final class TxOuterClass {
       if (!to_.isEmpty()) {
         output.writeBytes(2, to_);
       }
-      if (amount_ != 0L) {
+//      if (amount_ != 0L) {
         output.writeUInt64(3, amount_);
-      }
-      if (fee_ != 0L) {
+//      }
+//      if (fee_ != 0L) {
         output.writeUInt64(4, fee_);
-      }
+//      }
       if (nonce_ != 0) {
         output.writeUInt32(5, nonce_);
       }
@@ -1172,14 +1172,14 @@ public final class TxOuterClass {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, to_);
       }
-      if (amount_ != 0L) {
+//      if (amount_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt64Size(3, amount_);
-      }
-      if (fee_ != 0L) {
+//      }
+//      if (fee_ != 0L) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt64Size(4, fee_);
-      }
+//      }
       if (nonce_ != 0) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(5, nonce_);

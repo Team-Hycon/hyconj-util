@@ -28,7 +28,6 @@ import com.hycon.HyconUtil.mnemonic.Italian;
 import com.hycon.HyconUtil.mnemonic.Japanese;
 import com.hycon.HyconUtil.mnemonic.Korean;
 import com.hycon.HyconUtil.mnemonic.Spanish;
-import com.hycon.proto.TxOuterClass;
 import com.hycon.proto.TxOuterClass.Tx;
 import com.rfksystems.blake2b.Blake2b;
 import com.rfksystems.blake2b.security.Blake2bProvider;
@@ -164,14 +163,12 @@ public class Utils {
 		txBuilder.setAmount(hyconfromString(amount));
 		txBuilder.setFee(hyconfromString(minerFee));
 		txBuilder.setNonce(nonce);
+		txBuilder.setNetworkid(networkId);
 		
-		Tx.Builder newTxBuilder = Tx.newBuilder(txBuilder.build());
-		newTxBuilder.setNetworkid(networkId);
-		TxOuterClass.Tx newTx = newTxBuilder.build();
-		byte[] newTxData = newTx.toByteArray();
-		byte[] newTxHash = blake2bHash(newTxData);
+		byte[] txData = txBuilder.build().toByteArray();
+		byte[] txHash = blake2bHash(txData);
 		ECKeyPair ecKeyPair = ECKeyPair.create(decodeHexStringToByteArray(privatekey));
-		SignatureData signatureData = Sign.signMessage(newTxHash, ecKeyPair, false);
+		SignatureData signatureData = Sign.signMessage(txHash, ecKeyPair, false);
 		String signature = encodeHexByteArrayToString(signatureData.getR()) + encodeHexByteArrayToString(signatureData.getS());
 		String recovery = String.valueOf(signatureData.getV() - 27);
 		
